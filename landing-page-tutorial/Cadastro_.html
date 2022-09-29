@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styleCadastro_.css">
+    <title>Cadastro</title>
+</head>
+<body>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.8.4/firebase-app.js';
+        import { getDatabase, ref , set, get, child, onValue } from 'https://www.gstatic.com/firebasejs/9.8.4/firebase-database.js';
+
+        //configuração firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBahmej0LiYLLM5OadBKeB_NKDGb7u2dFE",
+            authDomain: "fir-js-c7e0e.firebaseapp.com",
+            databaseURL: "https://fir-js-c7e0e-default-rtdb.firebaseio.com",
+            projectId: "fir-js-c7e0e",
+            storageBucket: "fir-js-c7e0e.appspot.com",
+            messagingSenderId: "893278687955",
+            appId: "1:893278687955:web:d40c449a16dcfc1055fa26"
+          };
+
+        const app = initializeApp(firebaseConfig);
+        
+        //Cadastra Usuário
+
+        function writeUserData(nome, endereco, pais, telefone) {
+            
+            var adi=0; // começar em -1
+            adi++;
+            var numUser = numUser + adi; 
+            const db = getDatabase();
+              set(ref(db, 'users/' + endereco +' '+ pais), { 
+                Nome: nome,
+                endereco: endereco,
+                pais: pais,
+                telefone: telefone
+              }); 
+            }
+
+            document.getElementById("submit").addEventListener("click", Submit);
+            document.getElementById("telainicial").addEventListener("click", Redirect);
+
+        function Submit(){
+        if(document.getElementById("nome").value != "" && document.getElementById("endereco").value != "" && document.getElementById("pais").value != "" && document.getElementById("fone").value != ""){
+        writeUserData(document.getElementById("nome").value, document.getElementById("endereco").value, document.getElementById("pais").value, document.getElementById("fone").value);
+         document.getElementById("nome").value = ""; 
+         document.getElementById("endereco").value = "";
+         document.getElementById("pais").value = "";
+         document.getElementById("fone").value = "";
+         alert("Cadastrado com sucesso!");
+        }
+        else{
+            alert("Digite informações válidas!");
+        }
+        }
+        function Redirect(){
+            window.location.href = "index.html";
+        }
+
+</script>
+
+
+<div class="main-login">
+    <div class="left-login">
+    <h1>Cadastre seu terreno já!<br> E faça parte do Green Project</h1>
+    <img src="ImagemProjete.svg" class="left-imagem" alt="Imagem Projete">
+</div>
+
+<div class="right-login">
+    <div class=" card-login">
+        <h1>CADASTRO</h1>
+        <div class="textfield">
+            <label for="usuario">Nome</label>
+            <input type="text" name="Nome" id="nome" placeholder="Nome">
+        </div>
+        <div class="textfield">
+            <label for="cep">Endereço</label>
+            <input type="text" name="Endereco" id="endereco" placeholder="Endereço">
+        </div>
+        <div class="textfield">
+            <label for="pais">País</label>
+            <input type="text" name="País" id ="pais" placeholder="País">
+        </div>
+        <div class="textfield">
+            <label for="telefone">Telefone</label>
+            <input type="text" value = "+55" name="telefone" id ="fone" placeholder="Telefone">
+        </div>
+        <button class="btn-login" value="Submit" id="submit">Enviar</button>
+        <button class="btn-login" value="Submit" id="telainicial">Ir para página Inicial</button>
+
+    </div>
+</div>
+</body>
+</html>

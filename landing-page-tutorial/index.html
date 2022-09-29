@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/styles/style.css" rel="stylesheet">
+    <link href="/styles/fonts.css" rel="stylesheet">
+    <link href="/styles/media.css" rel="stylesheet">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <title>Landing Page</title>
+</head>
+<body>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.8.4/firebase-app.js';
+        import { getDatabase, ref, set, get, child, onValue } from 'https://www.gstatic.com/firebasejs/9.8.4/firebase-database.js';
+
+
+        
+        //configuração firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBahmej0LiYLLM5OadBKeB_NKDGb7u2dFE",
+            authDomain: "fir-js-c7e0e.firebaseapp.com",
+            databaseURL: "https://fir-js-c7e0e-default-rtdb.firebaseio.com",
+            projectId: "fir-js-c7e0e",
+            storageBucket: "fir-js-c7e0e.appspot.com",
+            messagingSenderId: "893278687955",
+            appId: "1:893278687955:web:d40c449a16dcfc1055fa26"
+        };
+
+        const app = initializeApp(firebaseConfig);
+
+
+        //Retorna endereços dos usuários
+        function getAdresses() {
+            const db = getDatabase();
+            var Ref = ref(db, '/users');
+            var data;
+
+            onValue(Ref, (snapshot) => { 
+                data = snapshot.val(); 
+                for (var i = 0; i < Object.values(data).length; i++) {
+                    //console.log(Object.values(data)[i].endereco + " " + Object.values(data)[i].Nome);
+
+                    var adresses=[];
+                    adresses[i] = Object.values(data)[i].endereco;
+                    var telefones =[];
+                    telefones[i] = Object.values(data)[i].telefone;
+                    console.log("O endereço é " + adresses[i]);
+                    console.log("O telefone é " + telefones[i]);
+                    var botoesEndereco=[];
+                    botoesEndereco[i]= document.createElement("BUTTON");
+                    var botoesTelefone= [];
+                    botoesTelefone[i]= document.createElement("BUTTON");
+
+                    var h = document.createElement("H1");
+                    botoesEndereco[i].innerHTML = "Abrir mapa do terreno";
+                    botoesTelefone[i].innerHTML = "Entrar em contato com proprietário";
+                    botoesEndereco[i].value = adresses[i];
+                    botoesTelefone[i].value = telefones[i];
+                    var t = document.createTextNode(Object.values(data)[i].endereco);
+                    h.appendChild(t);
+                    document.getElementById("rolagem").appendChild(h);
+                    document.getElementById("rolagem").appendChild(botoesEndereco[i]);
+                    document.getElementById("rolagem").appendChild(botoesTelefone[i]);
+
+
+
+                    botoesEndereco[i].onclick = function(e) {
+                        //window.location.href = geocode(this.value);
+                        geocode(this.value).then((value) =>{
+                            window.location.href = value;
+                        });
+                    };
+
+                    botoesTelefone[i].onclick = function(e) {
+                    window.location.href = "https://wa.me/" + this.value + "?text=Este%20%C3%A9%20meu%20whatsapp%20%2C%20entre%20em%20contato%20comigo!!!!"
+                    };
+
+                }
+            
+            
+            
+            
+            
+            
+            
+            });
+
+            
+        }
+
+        function redirect() {
+            window.location.href = "Cadastro_.html";
+        }
+
+        function geocode(local) {
+
+            var location = local.replace(/ /g, '%20');
+            var apikey = 'AIzaSyBuwjQG1FIg_7XcJfimnkm57CbW12E69aw';
+            var url = 'https://maps.googleapis.com/maps/api/geocode/json?' + 'address=' + location + '&key=' + apikey;
+            var link;
+
+            return axios.get(url)
+                .then(function (response) {
+                    var coordinates = response.data.results[0].geometry.location;
+                    //console.log(coordinates);
+                    //var mapa = initializeMap(coordinates);
+
+                    link = "http://maps.google.com/?ll="+coordinates.lat+','+coordinates.lng;
+                    //console.log(link);
+                    return link;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            
+        }
+
+
+        //document.getElementById("redirect").addEventListener("click", redirect);
+
+getAdresses();
+
+    </script>
+    <header>
+        <div id="title" >
+            <h1>Green</h1>
+            <h1>Project</h1>
+        </div>
+
+        <ul>
+            <a href=""><li>Sobre</li></a>
+            <a href="Cadastro_.html" id="inscreva-se-btn"><li>Cadastre seu terreno</li></a>
+        </ul>
+    </header>
+
+    <main>
+        <aside>
+            <h2><span>Terrenos disponíveis </span></h2>
+            <h2><span>para reflorestamento! </span></h2>
+
+            <p>
+                Por que não retribuir a natureza tudo que ela já nos deu?
+                Entre em contato com um dos proprietários voluntários abaixo e ajude! 
+                </p>
+            <div >
+                <div id = "rolagem" style="height:200px;width:460px;overflow:auto;background-color:rgba(14, 26, 13, 0.76);color:white;scrollbar-base-color:gold;font-family:sans-serif;padding:10px;">
+                </div>
+            
+
+
+
+                </div>
+        </aside>
+
+        <article>
+            <!-- <img src="logo.mp4" alt="mulher-roxa"> -->
+        </article>
+    </main>
+    
+</body>
+</html>
